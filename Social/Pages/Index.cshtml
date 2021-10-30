@@ -1,0 +1,69 @@
+﻿@page "{handler?}"
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <div class="text-center fs-6">
+        <a asp-page="index">
+            @if (Model.LastMessage != null)
+            {
+                @if (Model.LastMessage.Sis)
+                {
+                    <p class="mb-0">Sis!</p>
+                }
+                else
+                {
+                    <p class="mb-0">Bro!</p>
+                }
+                <p class="font-italic">
+                    Sent by @Model.LastMessage.UserName at @Model.LastMessage.DateTime.ToString("HH:mm")
+                </p>
+            }
+            else
+            {
+                <p>There were no messages</p>
+            }
+        </a>
+    </div>
+    <div class="text-center border-primary border w-50 m-auto rounded display-4">
+        <p class="font-weight-bold">statistics</p>
+        <div class="row justify-content-center">
+            <div class="col-lg-5">Sis: @Model.SisCount</div>
+            <div class="col-lg-5">Bro: @Model.BroCount</div>
+        </div>
+    </div>
+    @{
+        if (User.Identity.IsAuthenticated)
+        {
+            <form method="post">
+                <div>
+                    <button class="btn btn-primary btn-lg m-2 p-4" value="sis" name="sis">
+                        <span class="display-1">
+                            SIS!
+                        </span>
+                    </button>
+                    <button class="btn btn-primary btn-lg m-2 p-4" value="bro" name="bro">
+                        <span class="display-1">
+                            BRO!
+                        </span>
+                    </button>
+                </div>
+            </form>
+        }
+        else
+        {
+            <form id="external-account" asp-area="Identity" asp-page="/Account/ExternalLogin" asp-route-returnUrl="~/" method="post" class="form-horizontal mt-1">
+                <div>
+                    <p>
+                        @foreach (var provider in Model.ExternalLogins)
+                        {
+                            <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                        }
+                    </p>
+                </div>
+            </form>
+        }
+    }
+</div>
